@@ -1,5 +1,44 @@
-"use strict";var u=function(e,r){return function(){try{return r||e((r={exports:{}}).exports,r),r.exports}catch(t){throw (r=0, t)}};};var a=u(function(o,i){
-var s=require('@stdlib/ndarray-base-stride/dist'),v=require('@stdlib/ndarray-base-offset/dist'),q=require('@stdlib/ndarray-base-data-buffer/dist'),f=require('@stdlib/fft-base-fftpack-generic-rffti/dist'),n=require('@stdlib/ndarray-base-ndarraylike2scalar/dist');function c(e){var r,t;return r=e[0],t=n(e[1]),f(t,q(r),s(r,0),v(r)),r}i.exports=c
-});var d=a();module.exports=d;
 /** @license Apache-2.0 */
-//# sourceMappingURL=index.js.map
+
+'use strict';
+
+/**
+* Initialize a workspace array for performing a real-valued Fourier transform on a one-dimensional ndarray.
+*
+* @module @stdlib/fft-base-fftpack-ndarray-generic-rffti
+*
+* @example
+* var Float64Vector = require( '@stdlib/ndarray-vector-float64' );
+* var scalar2ndarray = require( '@stdlib/ndarray-from-scalar' );
+* var Slice = require( '@stdlib/slice-ctor' );
+* var slice = require( '@stdlib/ndarray-slice' );
+* var rffti = require( '@stdlib/fft-base-fftpack-ndarray-generic-rffti' );
+*
+* var N = 8;
+* var len = scalar2ndarray( N, {
+*     'dtype': 'int32'
+* });
+*
+* var w = new Float64Vector( ( 2*N ) + 34 );
+*
+* var out = rffti( [ w, len ] );
+* // returns <ndarray>
+*
+* var bool = ( out === w );
+* // returns true
+*
+* var twiddleFactors = slice( w, new Slice( N, 2*N ) );
+* // returns <ndarray>[ ~0.707, ~0.707, 0, 0, 0, 0, 0, 0 ]
+*
+* var factors = slice( w, new Slice( 2*N, ( 2*N ) + 4 ) );
+* // returns <ndarray>[ 8, 2, 2, 4 ]
+*/
+
+// MODULES //
+
+var main = require( './main.js' );
+
+
+// EXPORTS //
+
+module.exports = main;
