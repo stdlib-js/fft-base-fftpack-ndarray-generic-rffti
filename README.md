@@ -41,38 +41,32 @@ limitations under the License.
 
 <!-- /.intro -->
 
+<section class="installation">
 
+## Installation
+
+```bash
+npm install @stdlib/fft-base-fftpack-ndarray-generic-rffti
+```
+
+Alternatively,
+
+-   To load the package in a website via a `script` tag without installation and bundlers, use the [ES Module][es-module] available on the [`esm`][esm-url] branch (see [README][esm-readme]).
+-   If you are using Deno, visit the [`deno`][deno-url] branch (see [README][deno-readme] for usage intructions).
+-   For use in Observable, or in browser/node environments, use the [Universal Module Definition (UMD)][umd] build available on the [`umd`][umd-url] branch (see [README][umd-readme]).
+
+The [branches.md][branches-url] file summarizes the available branches and displays a diagram illustrating their relationships.
+
+To view installation and usage instructions specific to each branch build, be sure to explicitly navigate to the respective README files on each branch, as linked to above.
+
+</section>
 
 <section class="usage">
 
 ## Usage
 
-To use in Observable,
-
 ```javascript
-rffti = require( 'https://cdn.jsdelivr.net/gh/stdlib-js/fft-base-fftpack-ndarray-generic-rffti@umd/browser.js' )
-```
-
-To vendor stdlib functionality and avoid installing dependency trees for Node.js, you can use the UMD server build:
-
-```javascript
-var rffti = require( 'path/to/vendor/umd/fft-base-fftpack-ndarray-generic-rffti/index.js' )
-```
-
-To include the bundle in a webpage,
-
-```html
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/stdlib-js/fft-base-fftpack-ndarray-generic-rffti@umd/browser.js"></script>
-```
-
-If no recognized module system is present, access bundle contents via the global scope:
-
-```html
-<script type="text/javascript">
-(function () {
-    window.rffti;
-})();
-</script>
+var rffti = require( '@stdlib/fft-base-fftpack-ndarray-generic-rffti' );
 ```
 
 #### rffti( arrays )
@@ -120,6 +114,30 @@ The function has the following parameters:
 
 ## Notes
 
+-   Let `N` equal the number of elements in the input ndarray. The input ndarray is divided into three sections:
+
+    ```text
+              size = N                 N            2+ceil(log2(N)/2)
+                   ↓                   ↓                  ↓
+        | scratch / workspace | twiddle factors | radix factor table |
+                   ↑                   ↑                  ↑
+    i = 0         ...         N       ...       2N       ...
+    ```
+
+    -   **scratch/workspace**: used as a scratch space when performing transforms. This section is not updated during initialization.
+    -   **twiddle factors**: a table of reusable complex-exponential constants stored as cosine/sine pairs.
+    -   **radix factor table**: a table containing the sequence length `N`, the number of factors into which `N` was decomposed, and the individual integer radix factors.
+
+-   In general, an input ndarray should have `2N + 34` indexed elements (as `log2(N)/2 ≤ 32` for all `2^64`). During initialization, only the sections for storing twiddle factors and the factorization of `N` are updated.
+
+-   The radix factor table is comprised as follows:
+
+    ```text
+    | sequence_length | number_of_factors | integer_factors |
+    ```
+
+-   If `N` equals `1`, the function returns early without modifying the input ndarray, as a single data point is its own Fourier transform.
+
 -   If provided an empty one-dimensional input ndarray, the function returns the input ndarray unchanged.
 
 </section>
@@ -132,16 +150,11 @@ The function has the following parameters:
 
 <!-- eslint no-undef: "error" -->
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<body>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/stdlib-js/ndarray-vector-float64@umd/browser.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/stdlib-js/ndarray-from-scalar@umd/browser.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/stdlib-js/ndarray-to-array@umd/browser.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/stdlib-js/fft-base-fftpack-ndarray-generic-rffti@umd/browser.js"></script>
-<script type="text/javascript">
-(function () {
+```javascript
+var Float64Vector = require( '@stdlib/ndarray-vector-float64' );
+var scalar2ndarray = require( '@stdlib/ndarray-from-scalar' );
+var ndarray2array = require( '@stdlib/ndarray-to-array' );
+var rffti = require( '@stdlib/fft-base-fftpack-ndarray-generic-rffti' );
 
 var N = 8;
 
@@ -154,11 +167,6 @@ var len = scalar2ndarray( N, {
 
 var out = rffti( [ w, len ] );
 console.log( ndarray2array( out ) );
-
-})();
-</script>
-</body>
-</html>
 ```
 
 </section>
@@ -191,11 +199,6 @@ For more information on the project, filing bug reports and feature requests, an
 [![Chat][chat-image]][chat-url]
 
 ---
-
-## License
-
-See [LICENSE][stdlib-license].
-
 
 ## Copyright
 
@@ -242,8 +245,6 @@ Copyright &copy; 2016-2026. The Stdlib [Authors][stdlib-authors].
 [esm-url]: https://github.com/stdlib-js/fft-base-fftpack-ndarray-generic-rffti/tree/esm
 [esm-readme]: https://github.com/stdlib-js/fft-base-fftpack-ndarray-generic-rffti/blob/esm/README.md
 [branches-url]: https://github.com/stdlib-js/fft-base-fftpack-ndarray-generic-rffti/blob/main/branches.md
-
-[stdlib-license]: https://raw.githubusercontent.com/stdlib-js/fft-base-fftpack-ndarray-generic-rffti/main/LICENSE
 
 </section>
 
